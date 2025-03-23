@@ -1,25 +1,36 @@
 var webcam = {
   // (A) INITIALIZE - GET USER PERMISSION TO ACCESS CAMERA
-  hVid : null, hSnaps :null,
+  hVid : null, hSnaps : null, facingMode : "environment", // Adicionado facingMode
   init : () => {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }) // Alterado para usar a câmera traseira
+    webcam.startStream();
+  },
+
+  // (A1) START STREAM WITH CURRENT FACING MODE
+  startStream : () => {
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: webcam.facingMode } })
     .then(stream => {
-      // (A1) GET HTML ELEMENTS
+      // (A2) GET HTML ELEMENTS
       webcam.hVid = document.getElementById("cam-live"),
       webcam.hSnaps = document.getElementById("cam-snaps");
 
-      // (A2) "LIVE FEED" WEB CAM TO <VIDEO>
+      // (A3) "LIVE FEED" WEB CAM TO <VIDEO>
       webcam.hVid.srcObject = stream;
 
-      // (A3) ENABLE BUTTONS
+      // (A4) ENABLE BUTTONS
       document.getElementById("cam-take").disabled = false;
       document.getElementById("cam-save").disabled = false;
-      document.getElementById("cam-upload").disabled = false;
+      document.getElementById("cam-toggle").disabled = false; // Alterado para cam-toggle
     })
     .catch(err => {
       console.error(err);
-      alert("Erro ao acessar a câmera: " + err.message); // Adicionado alerta de erro
+      alert("Erro ao acessar a câmera: " + err.message);
     });
+  },
+
+  // (B) TOGGLE CAMERA BETWEEN FRONT AND BACK
+  toggleCamera : () => {
+    webcam.facingMode = webcam.facingMode === "environment" ? "user" : "environment";
+    webcam.startStream(); // Reiniciar o stream com a nova facingMode
   },
 
   // (B) SNAP VIDEO FRAME TO CANVAS
