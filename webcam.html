@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Demo de Captura de Webcam</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- https://fonts.google.com/icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="webcam.css">
+    <script defer src="webcam.js"></script>
+  </head>
+  <body>
+    <!-- (A) FEED DE VÍDEO AO VIVO -->
+    <video id="cam-live" autoplay></video>
+
+    <!-- (B) CONTROLES -->
+    <div id="cam-controls">
+      <input type="button" id="cam-take" class="material-icons"
+             value="photo_camera" onclick="webcam.take()" disabled>
+      <input type="button" id="cam-save" class="material-icons"
+             value="download" onclick="webcam.save()" disabled>
+      <input type="button" id="cam-upload" class="material-icons"
+             value="upload" onclick="webcam.upload()" disabled>
+    </div>
+
+    <!-- (C) CAPTURAS -->
+    <div id="cam-snaps"></div>
+  </body>
+</html>
