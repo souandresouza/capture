@@ -5,8 +5,8 @@
 }
 body, html {
   padding: 0; margin: 0;
-  color: #fff;
-  background: #202020; /* Alteração na cor de fundo */
+  color: #e0e0e0; /* Alteração na cor do texto */
+  background: #202020;
 }
 body {
   max-width: 1000px;
@@ -16,7 +16,7 @@ body {
 
 /* (B) LIVE FEED VIDEO */
 #cam-live {
-  height: 600px; /* Alteração na altura do vídeo */
+  height: 600px;
   object-fit: cover;
 }
 
@@ -26,8 +26,8 @@ body {
   flex-grow: 1;
   border: 0;
   color: #fff;
-  background: #444; /* Alteração na cor de fundo dos botões */
-  font-size: 28px; /* Alteração no tamanho da fonte */
+  background: #555; /* Alteração na cor de fundo dos botões */
+  font-size: 30px; /* Alteração no tamanho da fonte */
   padding: 20px 0;
   cursor: pointer;
 }
