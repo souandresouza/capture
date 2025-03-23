@@ -2,7 +2,7 @@ var webcam = {
   // (A) INITIALIZE - GET USER PERMISSION TO ACCESS CAMERA
   hVid : null, hSnaps :null,
   init : () => {
-    navigator.mediaDevices.getUserMedia({ video: true })
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }) // Alterado para usar a câmera traseira
     .then(stream => {
       // (A1) GET HTML ELEMENTS
       webcam.hVid = document.getElementById("cam-live"),
