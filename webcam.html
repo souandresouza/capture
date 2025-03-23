@@ -12,14 +12,14 @@
     <!-- (A) FEED DE VÍDEO AO VIVO -->
     <video id="cam-live" autoplay></video>
 
-    <!-- (B) CONTROLES -->
+    <!-- (B) CONTROLS -->
     <div id="cam-controls">
       <input type="button" id="cam-take" class="material-icons"
              value="photo_camera" onclick="webcam.take()" disabled>
       <input type="button" id="cam-save" class="material-icons"
              value="download" onclick="webcam.save()" disabled>
-      <input type="button" id="cam-upload" class="material-icons"
-             value="upload" onclick="webcam.upload()" disabled>
+      <input type="button" id="cam-toggle" class="material-icons"
+             value="switch_camera" onclick="webcam.toggleCamera()" disabled> <!-- Alterado para cam-toggle -->
     </div>
 
     <!-- (C) CAPTURAS -->
