@@ -1,25 +1,26 @@
 var webcam = {
-  // (A) INITIALIZE - GET USER PERMISSION TO ACCESS CAMERA
-  hVid : null, hSnaps : null, facingMode : "environment", // Adicionado facingMode
-  init : () => {
+  hVid: null, hSnaps: null, facingMode: "environment", zoomLevel: 1, // Adicionado zoomLevel
+  init: () => {
     webcam.startStream();
+    webcam.setupControls(); // Configurar controles de zoom
   },
 
-  // (A1) START STREAM WITH CURRENT FACING MODE
-  startStream : () => {
+  startStream: () => {
     navigator.mediaDevices.getUserMedia({ video: { facingMode: webcam.facingMode } })
     .then(stream => {
-      // (A2) GET HTML ELEMENTS
-      webcam.hVid = document.getElementById("cam-live"),
+      webcam.hVid = document.getElementById("cam-live");
       webcam.hSnaps = document.getElementById("cam-snaps");
-
-      // (A3) "LIVE FEED" WEB CAM TO <VIDEO>
       webcam.hVid.srcObject = stream;
 
-      // (A4) ENABLE BUTTONS
+      if (webcam.facingMode === "user") {
+        webcam.hVid.classList.add("mirror");
+      } else {
+        webcam.hVid.classList.remove("mirror");
+      }
+
       document.getElementById("cam-take").disabled = false;
       document.getElementById("cam-save").disabled = false;
-      document.getElementById("cam-toggle").disabled = false; // Alterado para cam-toggle
+      document.getElementById("cam-toggle").disabled = false;
     })
     .catch(err => {
       console.error(err);
@@ -27,14 +28,36 @@ var webcam = {
     });
   },
 
+  setupControls: () => {
+    // Adicionar event listeners para gestos de toque ou botões de volume
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowUp' || event.key === '+') {
+        webcam.zoomLevel += 0.1;
+      } else if (event.key === 'ArrowDown' || event.key === '-') {
+        webcam.zoomLevel -= 0.1;
+      }
+      webcam.applyZoom();
+    });
+
+    // Exemplo de controle de toque
+    webcam.hVid.addEventListener('wheel', (event) => {
+      webcam.zoomLevel += event.deltaY > 0 ? -0.1 : 0.1;
+      webcam.applyZoom();
+    });
+  },
+
+  applyZoom: () => {
+    webcam.hVid.style.transform = `scale(${webcam.zoomLevel})`;
+  },
+
   // (B) TOGGLE CAMERA BETWEEN FRONT AND BACK
-  toggleCamera : () => {
+  toggleCamera: () => {
     webcam.facingMode = webcam.facingMode === "environment" ? "user" : "environment";
     webcam.startStream(); // Reiniciar o stream com a nova facingMode
   },
 
   // (B) SNAP VIDEO FRAME TO CANVAS
-  snap : () => {
+  snap: () => {
     // (B1) CREATE NEW CANVAS
     let cv = document.createElement("canvas"),
         cx = cv.getContext("2d");
@@ -49,10 +72,10 @@ var webcam = {
   },
 
   // (C) PUT SNAPSHOT INTO <DIV> WRAPPER
-  take : () => webcam.hSnaps.appendChild(webcam.snap()),
+  take: () => webcam.hSnaps.appendChild(webcam.snap()),
 
   // (D) FORCE DOWNLOAD SNAPSHOT
-  save : () => {
+  save: () => {
     // (D1) TAKE A SNAPSHOT, CREATE DOWNLOAD LINK
     let cv = webcam.snap(),
         a = document.createElement("a");
@@ -67,7 +90,7 @@ var webcam = {
   },
 
   // (E) UPLOAD SNAPSHOT TO SERVER
-  upload : () => {
+  upload: () => {
     // (E1) APPEND SCREENSHOT TO DATA OBJECT
     var data = new FormData();
     data.append("snap", webcam.snap().toDataURL("image/jpeg", 0.6));
