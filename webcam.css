@@ -98,6 +98,7 @@ body {
     transition: transform 0.3s ease;
 }
 
+/* MODIFICAÇÕES PARA O ZOOM MOBILE */
 .zoom-controls {
     position: fixed;
     bottom: 80px;
@@ -106,6 +107,20 @@ body {
     background: rgba(0,0,0,0.5);
     padding: 10px;
     border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Esconder controles de zoom no mobile */
+@media (max-width: 768px) {
+    .zoom-controls {
+        display: none;
+    }
+    
+    #cam-live {
+        touch-action: none; /* Permite detectar gestos personalizados */
+    }
 }
 
 .zoom-controls {
@@ -133,6 +148,25 @@ body {
 @media (min-width: 768px) {
   .zoom-hint {
     display: block;
+  }
+}
+
+.filter-btn {
+  padding: 15px !important;
+  font-size: 24px !important;
+}
+.active-filter {
+  background: #007bff !important;
+  color: white !important;
+}
+@media (max-width: 768px) {
+  .filter-controls {
+    position: fixed;
+    bottom: 70px;
+    left: 0;
+    right: 0;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 }
 
