@@ -1,8 +1,15 @@
 var webcam = {
-  hVid: null, hSnaps: null, facingMode: "environment", zoomLevel: 1, // Adicionado zoomLevel
+  hVid: null, hSnaps: null, facingMode: "environment", zoomLevel: 1,
+  filters: {
+    none: "",
+    grayscale: "grayscale(100%)",
+    sepia: "sepia(100%)",
+    invert: "invert(100%)"
+  },
+
   init: () => {
     webcam.startStream();
-    webcam.setupControls(); // Configurar controles de zoom
+    webcam.setupControls();
   },
 
   startStream: () => {
@@ -29,14 +36,24 @@ var webcam = {
   },
 
   setupControls: () => {
-    // Adicionar event listeners para gestos de toque ou botões de volume
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowUp' || event.key === '+') {
-        webcam.zoomLevel += 0.1;
-      } else if (event.key === 'ArrowDown' || event.key === '-') {
-        webcam.zoomLevel -= 0.1;
-      }
+    // Controles de zoom
+    document.getElementById("zoom-in").addEventListener("click", () => {
+      webcam.zoomLevel = Math.min(webcam.zoomLevel + 0.1, 3);
       webcam.applyZoom();
+      webcam.updateZoomDisplay();
+    });
+    
+    document.getElementById("zoom-out").addEventListener("click", () => {
+      webcam.zoomLevel = Math.max(webcam.zoomLevel - 0.1, 0.5);
+      webcam.applyZoom();
+      webcam.updateZoomDisplay();
+    });
+
+    // Controles de filtro
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        webcam.applyFilter(btn.dataset.filter);
+      });
     });
 
     // Exemplo de controle de toque
@@ -47,8 +64,14 @@ var webcam = {
   },
 
   applyZoom: () => {
+    webcam.zoomLevel = Math.max(0.5, Math.min(webcam.zoomLevel, 3)); // Limite entre 0.5x e 3x
     webcam.hVid.style.transform = `scale(${webcam.zoomLevel})`;
-  },
+},
+
+updateZoomDisplay: () => {
+    document.getElementById("zoom-level").textContent = 
+        `${Math.round(webcam.zoomLevel * 100)}%`;
+},
 
   // (B) TOGGLE CAMERA BETWEEN FRONT AND BACK
   toggleCamera: () => {
@@ -103,3 +126,9 @@ var webcam = {
   }
 };
 window.addEventListener("load", webcam.init);
+
+  applyFilter: (filter) => {
+    if (webcam.hVid) {
+      webcam.hVid.style.filter = webcam.filters[filter] || "";
+    }
+  }
