@@ -93,3 +93,18 @@ body {
   transition: transform 0.2s; /* Suavizar o efeito de zoom */
 }
 
+#cam-live {
+    transform-origin: center center;
+    transition: transform 0.3s ease;
+}
+
+.zoom-controls {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 100;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 20px;
+}
+
