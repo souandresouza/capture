@@ -22,11 +22,12 @@
       <input type="button" id="cam-toggle" class="material-icons"
              value="switch_camera" onclick="webcam.toggleCamera()" disabled>
       
-      <!-- Controles de zoom -->
+      <!-- Controles de zoom - Versão melhorada -->
       <div class="zoom-controls">
-        <button id="zoom-out" class="material-icons">zoom_out</button>
-        <span id="zoom-level">100%</span>
-        <button id="zoom-in" class="material-icons">zoom_in</button>
+        <button id="zoom-out" class="material-icons" title="Zoom Out (Volume Down no mobile)">zoom_out</button>
+        <span id="zoom-level" class="zoom-display">100%</span>
+        <button id="zoom-in" class="material-icons" title="Zoom In (Volume Up no mobile)">zoom_in</button>
+        <div class="zoom-hint">Use roda do mouse no desktop</div>
       </div>
       
       <!-- Controles de filtro -->
