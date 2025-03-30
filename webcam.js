@@ -82,16 +82,38 @@ var webcam = {
 
     // Controles de filtro
     document.querySelectorAll(".filter-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
         webcam.applyFilter(btn.dataset.filter);
+        btn.classList.add("active-filter");
       });
     });
 
     // Exemplo de controle de toque
-    webcam.hVid.addEventListener('wheel', (event) => {
-      webcam.zoomLevel += event.deltaY > 0 ? -0.1 : 0.1;
-      webcam.applyZoom();
-    });
+    // Adicionar no setupControls()
+    let startY = 0;
+    let zoomStart = 1;
+
+    webcam.hVid.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        zoomStart = webcam.zoomLevel;
+        e.preventDefault();
+    }, {passive: false});
+    
+    webcam.hVid.addEventListener('touchmove', (e) => {
+        const currentY = e.touches[0].clientY;
+        const deltaY = startY - currentY;
+        
+        // Ajuste de sensibilidade (quanto maior, menos sensível)
+        const sensitivity = 100; 
+        const zoomChange = deltaY / sensitivity;
+        
+        webcam.zoomLevel = Math.max(0.5, Math.min(zoomStart + zoomChange, 3));
+        webcam.applyZoom();
+        webcam.updateZoomDisplay();
+        
+        e.preventDefault();
+    }, {passive: false});
   },
 
   applyZoom: () => {
