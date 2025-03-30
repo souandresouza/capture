@@ -36,17 +36,48 @@ var webcam = {
   },
 
   setupControls: () => {
-    // Controles de zoom
+    // Desktop: Wheel zoom with position adjustment
+    webcam.hVid.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        const rect = webcam.hVid.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        
+        const delta = Math.sign(event.deltaY);
+        webcam.zoomLevel = Math.max(0.5, Math.min(webcam.zoomLevel - delta * 0.1, 3));
+        
+        // Adjust transform origin based on mouse position
+        webcam.hVid.style.transformOrigin = `${(x / rect.width) * 100}% ${(y / rect.height) * 100}%`;
+        webcam.applyZoom();
+        webcam.updateZoomDisplay();
+    });
+
+    // Mobile: Volume buttons as zoom controls
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'VolumeUp' || event.code === 'VolumeUp') {
+            webcam.zoomLevel = Math.min(webcam.zoomLevel + 0.1, 3);
+            webcam.applyZoom();
+            webcam.updateZoomDisplay();
+            event.preventDefault();
+        } else if (event.key === 'VolumeDown' || event.code === 'VolumeDown') {
+            webcam.zoomLevel = Math.max(webcam.zoomLevel - 0.1, 0.5);
+            webcam.applyZoom();
+            webcam.updateZoomDisplay();
+            event.preventDefault();
+        }
+    });
+
+    // Button controls as fallback
     document.getElementById("zoom-in").addEventListener("click", () => {
-      webcam.zoomLevel = Math.min(webcam.zoomLevel + 0.1, 3);
-      webcam.applyZoom();
-      webcam.updateZoomDisplay();
+        webcam.zoomLevel = Math.min(webcam.zoomLevel + 0.1, 3);
+        webcam.applyZoom();
+        webcam.updateZoomDisplay();
     });
     
     document.getElementById("zoom-out").addEventListener("click", () => {
-      webcam.zoomLevel = Math.max(webcam.zoomLevel - 0.1, 0.5);
-      webcam.applyZoom();
-      webcam.updateZoomDisplay();
+        webcam.zoomLevel = Math.max(webcam.zoomLevel - 0.1, 0.5);
+        webcam.applyZoom();
+        webcam.updateZoomDisplay();
     });
 
     // Controles de filtro
@@ -64,8 +95,12 @@ var webcam = {
   },
 
   applyZoom: () => {
-    webcam.zoomLevel = Math.max(0.5, Math.min(webcam.zoomLevel, 3)); // Limite entre 0.5x e 3x
+    webcam.zoomLevel = Math.max(0.5, Math.min(webcam.zoomLevel, 3));
     webcam.hVid.style.transform = `scale(${webcam.zoomLevel})`;
+    // Reset transform origin after zoom completes
+    setTimeout(() => {
+        webcam.hVid.style.transformOrigin = 'center center';
+    }, 300);
 },
 
 updateZoomDisplay: () => {
