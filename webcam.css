@@ -20,16 +20,54 @@ body {
   object-fit: cover;
 }
 
-/* (C) CONTROL BUTTONS */
-#cam-controls { display: flex; }
-#cam-controls input {
+/* (C) CONTROL BUTTONS - Atualizado */
+#cam-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  background: #333;
+}
+
+#cam-controls input, 
+#cam-controls button {
   flex-grow: 1;
   border: 0;
+  border-radius: 5px;
   color: #fff;
-  background: #555; /* Alteração na cor de fundo dos botões */
-  font-size: 30px; /* Alteração no tamanho da fonte */
-  padding: 20px 0;
+  background: #555;
+  font-size: 30px;
+  padding: 15px 0;
   cursor: pointer;
+  transition: all 0.3s;
+}
+
+#cam-controls button:hover {
+  background: #777;
+}
+
+/* Novos estilos para controles de zoom e filtro */
+.zoom-controls, .filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+}
+
+.zoom-controls {
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.filter-controls {
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+#zoom-level {
+  min-width: 60px;
+  text-align: center;
+  font-size: 16px;
 }
 
 /* (D) SNAPSHOTS */
@@ -54,3 +92,4 @@ body {
   filter: brightness(1.2) contrast(1.1);
   transition: transform 0.2s; /* Suavizar o efeito de zoom */
 }
+
