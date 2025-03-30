@@ -1,15 +1,8 @@
 var webcam = {
-  hVid: null, hSnaps: null, facingMode: "environment", zoomLevel: 1,
-  filters: {
-    none: "",
-    grayscale: "grayscale(100%)",
-    sepia: "sepia(100%)",
-    invert: "invert(100%)"
-  },
-
+  hVid: null, hSnaps: null, facingMode: "environment",
+  
   init: () => {
     webcam.startStream();
-    webcam.setupControls();
   },
 
   startStream: () => {
@@ -34,101 +27,6 @@ var webcam = {
       alert("Erro ao acessar a câmera: " + err.message);
     });
   },
-
-  setupControls: () => {
-    // Desktop: Wheel zoom with position adjustment
-    webcam.hVid.addEventListener('wheel', (event) => {
-        event.preventDefault();
-        const rect = webcam.hVid.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        
-        const delta = Math.sign(event.deltaY);
-        webcam.zoomLevel = Math.max(0.5, Math.min(webcam.zoomLevel - delta * 0.1, 3));
-        
-        // Adjust transform origin based on mouse position
-        webcam.hVid.style.transformOrigin = `${(x / rect.width) * 100}% ${(y / rect.height) * 100}%`;
-        webcam.applyZoom();
-        webcam.updateZoomDisplay();
-    });
-
-    // Mobile: Volume buttons as zoom controls
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'VolumeUp' || event.code === 'VolumeUp') {
-            webcam.zoomLevel = Math.min(webcam.zoomLevel + 0.1, 3);
-            webcam.applyZoom();
-            webcam.updateZoomDisplay();
-            event.preventDefault();
-        } else if (event.key === 'VolumeDown' || event.code === 'VolumeDown') {
-            webcam.zoomLevel = Math.max(webcam.zoomLevel - 0.1, 0.5);
-            webcam.applyZoom();
-            webcam.updateZoomDisplay();
-            event.preventDefault();
-        }
-    });
-
-    // Button controls as fallback
-    document.getElementById("zoom-in").addEventListener("click", () => {
-        webcam.zoomLevel = Math.min(webcam.zoomLevel + 0.1, 3);
-        webcam.applyZoom();
-        webcam.updateZoomDisplay();
-    });
-    
-    document.getElementById("zoom-out").addEventListener("click", () => {
-        webcam.zoomLevel = Math.max(webcam.zoomLevel - 0.1, 0.5);
-        webcam.applyZoom();
-        webcam.updateZoomDisplay();
-    });
-
-    // Controles de filtro
-    document.querySelectorAll(".filter-btn").forEach(btn => {
-      btn.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-        webcam.applyFilter(btn.dataset.filter);
-        btn.classList.add("active-filter");
-      });
-    });
-
-    // Exemplo de controle de toque
-    // Adicionar no setupControls()
-    let startY = 0;
-    let zoomStart = 1;
-
-    webcam.hVid.addEventListener('touchstart', (e) => {
-        startY = e.touches[0].clientY;
-        zoomStart = webcam.zoomLevel;
-        e.preventDefault();
-    }, {passive: false});
-    
-    webcam.hVid.addEventListener('touchmove', (e) => {
-        const currentY = e.touches[0].clientY;
-        const deltaY = startY - currentY;
-        
-        // Ajuste de sensibilidade (quanto maior, menos sensível)
-        const sensitivity = 100; 
-        const zoomChange = deltaY / sensitivity;
-        
-        webcam.zoomLevel = Math.max(0.5, Math.min(zoomStart + zoomChange, 3));
-        webcam.applyZoom();
-        webcam.updateZoomDisplay();
-        
-        e.preventDefault();
-    }, {passive: false});
-  },
-
-  applyZoom: () => {
-    webcam.zoomLevel = Math.max(0.5, Math.min(webcam.zoomLevel, 3));
-    webcam.hVid.style.transform = `scale(${webcam.zoomLevel})`;
-    // Reset transform origin after zoom completes
-    setTimeout(() => {
-        webcam.hVid.style.transformOrigin = 'center center';
-    }, 300);
-},
-
-updateZoomDisplay: () => {
-    document.getElementById("zoom-level").textContent = 
-        `${Math.round(webcam.zoomLevel * 100)}%`;
-},
 
   // (B) TOGGLE CAMERA BETWEEN FRONT AND BACK
   toggleCamera: () => {
@@ -183,9 +81,3 @@ updateZoomDisplay: () => {
   }
 };
 window.addEventListener("load", webcam.init);
-
-  applyFilter: (filter) => {
-    if (webcam.hVid) {
-      webcam.hVid.style.filter = webcam.filters[filter] || "";
-    }
-  }
