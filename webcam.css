@@ -108,3 +108,31 @@ body {
     border-radius: 20px;
 }
 
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0,0,0,0.7);
+  padding: 8px;
+  border-radius: 20px;
+}
+
+.zoom-display {
+  min-width: 45px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.zoom-hint {
+  font-size: 0.8em;
+  margin-left: 10px;
+  color: #aaa;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .zoom-hint {
+    display: block;
+  }
+}
+
